@@ -1,58 +1,91 @@
-import os
-import sys
-import datetime
+import os, sys, datetime, time
+
 
 class Organise(object):
-    def __init__(self):
-        """Initialises data. Stores names for date intervals (tuples) in self._names
+
+    def __init__(self, src, dest):
+        """Initialises data. Specify prospective folder names, with date intervals (tuples), in self._categories
         """
-        
-        self._current_dir = ''
-        self._dest_dir = ''
-        self._names = {'c_wedding_renee':[(2015,10,27),(2015,10,27)],
-                       'mum_peru':[(2014,8,1),(2014,9,3)]
-                 }
-    
-    def move(self, src, dest):
-        """Takes source folder, iterates through each nested object
-           (folder or file) and moves each file to destination dir (created)
-           
-           move('path/to/src','path/to/dest') -> None
+        self._src = src
+        self._dest = dest
+        self._categories = [
+                            {'dir_name': 'c_wedding_renee', 'date_range': [(2015, 04, 18), (2015, 04, 18)]},
+                            {'dir_name': 'c_stylemag_chanel7', 'date_range': [(2014, 01, 24), (2014, 01, 24)]}
+                            ]
+
+    def create_dir(self):
+        """Creates directory within destination directory, based on category dir_name
+        :return: None
         """
-        #havent incorporated dest yet
-        str_src = src +'/'
-        os.chdir(str(src))
-        src = os.listdir(src)
+        for cat in self._categories:
+            dir_name = cat['dir_name']
+            os.chdir(self._dest)
+            os.makedirs(dir_name)
 
-        for i in src:
-            if i.endswith('.jpg') or i.endswith('.JPG'):
-                created = str(datetime.datetime.fromtimestamp(os.path.getctime(i)))[:-9].split('-')
-                print(created)
-                newdir =  created[0] + '-' + created[1] + '-' + created[2] +'/'
-                date = (int(created[0]), int(created[1]), int(created[2]))
-                print(i)
-                for name in self._names:
+        return None
 
-                    if self._names[name][0] <= date <= self._names[name][1]:
-                        if os.path.exists(name):
-                            name += '/'
-                            os.rename(str_src + str(i), str_src + name + str(i))
-                        else:
-                            os.makedirs(name)
-                            name += '/'
-                            os.rename(str_src + str(i), str_src + name + str(i))
+    def seek(self, cwd):
+        """
+        Crawls through directory and places files within a specified date range in their specified category
+        :param cwd: str
+        :return: None
+        """
+        cwd += '/'
+        os.chdir(cwd)   # change current working dir to 'cwd' arg
+        src_files = os.listdir(cwd)
+        src_files.remove('.DS_Store')
+        src_folders = []
 
-                    elif os.path.exists(newdir):
-                        os.rename(str_src + str(i), str_src + newdir + str(i))
-                        
-                    else:
-                        os.makedirs(newdir)
-                        os.rename(str_src + str(i), str_src + newdir + str(i)) 
+        for item in src_files:
+            item_path = cwd + item
 
-x = Organise()
+            if os.path.isfile(item_path):
+                self.move(item_path)
+            else:
+                src_folders.append(item_path)
 
-src = '/Users/Quirky/Pictures/test'
-dest= '/Users/Quirky/Desktop'
+        for folder_path in src_folders:
+            self.seek(folder_path)
 
-x.move(src, dest)
-    
+        return None
+
+
+
+    def move(self, file):
+
+        """
+        Moves given file to new directory, as determined by its created date and the date range of a particular category
+        :param file: str
+        :return: None
+        """
+        print(file)
+        if file.endswith('.jpg') or file.endswith('.JPG'):
+            date_arr = str(datetime.datetime.fromtimestamp(os.path.getmtime(file)))[:-9].split('-')
+            date_path = date_arr[0] + '-' + date_arr[1] + '-' + date_arr[2] + '/'
+            date_created = (int(date_arr[0]), int(date_arr[1]), int(date_arr[2]))
+
+            for cat in self._categories:
+                date_range = cat['date_range']
+                dir_name = cat['dir_name']
+                if date_range[0] <= date_created <= date_range[1]:
+                    new_path = self._dest + '/' + dir_name + '/' + file.split('/')[-1]
+                    os.rename(file, new_path)
+
+        return None
+
+    def run(self):
+        """
+        Runs script
+        :return:
+        """
+        self.create_dir()
+        self.seek(self._src)
+
+
+
+src = '/Users/tomquirk/Documents/collection'
+dest = '/Users/tomquirk/Documents/photos'
+
+organise = Organise(src, dest)
+
+organise.run()
