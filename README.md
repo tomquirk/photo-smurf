@@ -1,4 +1,4 @@
-# Album Smurf (alpha)
+# Photo Smurf (alpha)
 
 ### A Date-based File Crawler that Beautifies your Photo Library
 

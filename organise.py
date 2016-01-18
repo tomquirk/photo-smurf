@@ -1,5 +1,5 @@
-import os, sys, datetime, time
-
+import os, sys, datetime, time, ttk
+import Tkinter as tk
 
 class Organise(object):
 
@@ -9,8 +9,8 @@ class Organise(object):
         self._src = src
         self._dest = dest
         self._categories = [
-                            {'dir_name': 'c_wedding_renee', 'date_range': [(2015, 04, 18), (2015, 04, 18)]},
-                            {'dir_name': 'c_stylemag_chanel7', 'date_range': [(2014, 01, 24), (2014, 01, 24)]}
+                            {'dir_name': 'c_wedding_renee', 'date_range': [(2015, 4, 18), (2015, 4, 18)]},
+                            {'dir_name': 'c_stylemag_chanel7', 'date_range': [(2014, 1, 24), (2014, 1, 24)]}
                             ]
 
     def create_dir(self):
@@ -81,11 +81,49 @@ class Organise(object):
         self.create_dir()
         self.seek(self._src)
 
+class App(object):
+    """The Top-level class for the GUI."""
+    
+    def __init__(self, root):
+        """Initialises Gui params
+        """
+        self._root = root
+        title = tk.Label(self._root, text="Photo Smurf")
+        
+        self._input_count = 0
+        
+        add_input = tk.Button(self._root, text="Add Album", command=self.create_input)
+        
+        title.pack()
+        add_input.pack()
+        
+    def create_input (self):
+        print('input created! ID: %d' % self._input_count)
+        entryId = self._input_count
+        entryId = tk.Entry(self._root, width=60)
+        entryId.pack()
+        
+        self._input_count += 1
+        
+    def exit(self):
+        """Close the application.
+        TemperaturePlotApp.exit() -> None
+        """
+        self._master.destroy()
+        
+def main():
+    root = tk.Tk()
+    app = App(root)
+    app.create_input()
+    root.geometry("800x400")
+    root.mainloop()
 
-
-src = '/Users/tomquirk/Documents/collection'
-dest = '/Users/tomquirk/Documents/photos'
-
-organise = Organise(src, dest)
-
-organise.run()
+if __name__ == '__main__':
+    main()
+    
+#src = '/Users/tomquirk/Documents/collection'
+#dest = '/Users/tomquirk/Documents/photos'
+#
+#organise = Organise(src, dest)
+#
+#organise.run()
