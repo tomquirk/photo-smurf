@@ -9,6 +9,14 @@
 3. ...
 4. Profit
 
+### Creating an 'Album"
+
+Start by creating 'albums.txt' within this directory. Within this file:
+
+`ALBUM_NAME DD/MM/YYYY`
+
+Separate each album with newline
+
 ## Progression from Alpha
 
 ### Aim
