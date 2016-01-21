@@ -13,9 +13,16 @@
 
 Start by creating 'albums.txt' within this directory. Within this file:
 
-`ALBUM_NAME DD/MM/YYYY`
+`ALBUM_NAME FROM_DATE TO_DATE`
 
-Separate each album with newline. Make sure you album name contains NO SPACES!
+-Separate each album with newline.
+-Date formatting: DD/MM/YYYY
+-Make sure you album name contains NO SPACES!
+-If your album only spans 1 day, don't include TO_DATE
+
+#### Example
+
+`family_holiday 11/01/2015 28/01/2015`
 
 ## Progression from Alpha
 
