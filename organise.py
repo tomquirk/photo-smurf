@@ -1,9 +1,12 @@
 import os, sys, datetime, time, shutil
 import Tkinter as tk
 
+
 class Colour:
     """Class for holding ANSI print colours"""
-    
+    def __init__(self):
+        return None
+
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
@@ -13,6 +16,7 @@ class Colour:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+
 class Organise(object):
 
     def __init__(self, src, dest, f):
@@ -21,11 +25,13 @@ class Organise(object):
         self._src = src
         self._dest = dest
         self._albums = open(f)
+        
+        self._file_types = ['.jpg', '.cr2']
         self._categories = []
         
     def get_albums(self, txt_file):
         """
-        Contructs selc._categories object based on text file (see documentation for naming convention)
+        Populates self._categories object based on text file (see documentation for naming convention)
         :param txt_file: str
         :return: list
         """
@@ -46,7 +52,7 @@ class Organise(object):
         for album in albums:
             album = album.split(' ')
             
-            if len(album)<2:
+            if len(album) < 2:
                 break
             
             dir_name = album[0]
@@ -58,7 +64,7 @@ class Organise(object):
             else:
                 date_range = [(date_1[2], date_1[1], date_1[0]), (date_1[2], date_1[1], date_1[0])]
                 
-            self._categories.append({ 'dir_name': dir_name, 'date_range': date_range, 'fcount': 0 })
+            self._categories.append({'dir_name': dir_name, 'date_range': date_range, 'fcount': 0})
 
         return self._categories
     
@@ -71,6 +77,8 @@ class Organise(object):
         if not os.path.exists(self._dest):
             print(Colour.WARNING + 'The destination directory you entered does not exist!\n' + Colour.ENDC)
             return False
+        
+        return True
 
     def seek(self, cwd):
         """
@@ -81,7 +89,8 @@ class Organise(object):
         cwd += '/'
         os.chdir(cwd)   # change current working dir to 'cwd' arg
         src_files = os.listdir(cwd)
-        src_files.remove('.DS_Store')
+        if 'DS_Store' in src_files:
+            src_files.remove('.DS_Store')
         src_folders = []
         
         for item in src_files:
@@ -93,6 +102,7 @@ class Organise(object):
                 src_folders.append(item_path)
 
         for folder_path in src_folders:
+            print(folder_path.split('/')[-1])
             self.seek(folder_path)
 
         return None
@@ -103,19 +113,21 @@ class Organise(object):
         :param file: str
         :return: None
         """
-        if file.endswith('.jpg') or file.endswith('.JPG'):
-            date_arr = str(datetime.datetime.fromtimestamp(os.path.getmtime(file)))[:-9].split('-')
-            date_path = date_arr[0] + '-' + date_arr[1] + '-' + date_arr[2] + '/'
+        file_ext = os.path.splitext(file)[1]
+        if file_ext.lower() in self._file_types:
+            date_arr = str(datetime.datetime.fromtimestamp(os.path.getmtime(file)))[:-9]
+            if len(date_arr) > len('2014-02-10'):
+                date_arr = date_arr[:-7]
+            date_arr = date_arr.split('-')
             date_created = (int(date_arr[0]), int(date_arr[1]), int(date_arr[2]))
-            
+
             for i, cat in enumerate(self._categories):
                 date_range = cat['date_range']
                 fcount = cat['fcount']
                 dir_name = cat['dir_name']
                 
                 if date_range[0] <= date_created <= date_range[1]:
-                    dir_name = cat['dir_name']
-                    
+
                     # make album dir
                     os.chdir(self._dest)
                     try:
@@ -123,13 +135,14 @@ class Organise(object):
                     except OSError:
                         pass
                         
-                    new_fname = dir_name[2:] + '_%d.jpg' % fcount
+                    new_fname = dir_name[2:] + '_%d%s' % (fcount, file_ext)
                     
                     new_path = self._dest + '/' + dir_name + '/' + new_fname
-                    shutil.copyfile(file, new_path)
-                    print(str('\tCopied file ' + Colour.OKGREEN + '%s' + Colour.ENDC + ' to album ' + Colour.OKGREEN + '%s' + Colour.ENDC) % (new_fname, os.path.basename(dir_name)))
+                    if not os.path.isfile(new_path):
+                        shutil.copy2(file, new_path)
+                        print(str('\tCopied file ' + Colour.OKGREEN + '%s' + Colour.ENDC + ' to album ' + Colour.OKGREEN + '%s' + Colour.ENDC) % (new_fname, os.path.basename(dir_name)))
 
-                    self._categories[i]['fcount'] += 1
+                        self._categories[i]['fcount'] += 1
 
         return None
 
@@ -148,6 +161,7 @@ class Organise(object):
         print(Colour.OKBLUE + '\nSMURFS ARE FINISHED!\n' + Colour.ENDC)
         return None
 
+
 class App(object):
     """The Top-level class for the GUI."""
     
@@ -164,11 +178,37 @@ class App(object):
         title.pack()
         add_input.pack()
         
-    def create_input (self):
+    def create_input(self):
         print('input created! ID: %d' % self._input_count)
-        entryId = self._input_count
-        entryId = tk.Entry(self._root, width=60)
-        entryId.pack()
+        
+        # DAY
+        day_label = tk.Label(text="Day")
+        
+        days = [i for i in range(32) if i > 0]
+        day = tk.StringVar()
+        day.set(days[0])
+        day_select = tk.OptionMenu(self._root, day, *days)
+        
+        # MONTH
+        month_label = tk.Label(text="Month")
+        
+        months = [i for i in range(13) if i > 0]
+        month = tk.StringVar()
+        month.set(months[0])
+        month_select = tk.OptionMenu(month, *months)
+        
+        year_label = tk.Label(text="Year")
+
+        year_input = tk.Entry(width=4)
+        
+        day_label.pack()
+        day_select.pack()
+        
+        month_label.pack()
+        month_select.pack()
+        
+        year_label.pack()
+        year_input.pack()
         
         self._input_count += 1
         
@@ -177,22 +217,23 @@ class App(object):
         TemperaturePlotApp.exit() -> None
         """
         self._master.destroy()
-        
+
+
 def main():
     root = tk.Tk()
     app = App(root)
     app.create_input()
     root.geometry("800x400")
- #   root.mainloop()
+    # root.mainloop()
 
-#if __name__ == '__main__':
- #   main()
+# if __name__ == '__main__':
+    # main()
     
-src = '/Users/tom.quirk/Documents/photos_src'
-dest = '/Users/tom.quirk/Documents/photos_dest'
+src_dir = '/Volumes/ALPHA/photo_library'
+dest_dir = '/Users/tomquirk/Pictures/photo_library'
 
-albums = 'albums.txt'
+albums_file = 'albums.txt'
 
-organise = Organise(src, dest, albums)
+organise = Organise(src_dir, dest_dir, albums_file)
 
 organise.run()
