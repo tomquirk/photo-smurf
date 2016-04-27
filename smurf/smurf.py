@@ -17,7 +17,7 @@ class Colour:
     UNDERLINE = '\033[4m'
 
 
-class Organise(object):
+class Smurf(object):
 
     def __init__(self, src, dest, f):
         """Initialises data. Specify prospective folder names, with date intervals (tuples), in self._categories
@@ -25,10 +25,10 @@ class Organise(object):
         self._src = src
         self._dest = dest
         self._albums = open(f)
-        
+
         self._file_types = ['.jpg', '.cr2']
         self._categories = []
-        
+
     def get_albums(self, txt_file):
         """
         Populates self._categories object based on text file (see documentation for naming convention)
@@ -46,28 +46,28 @@ class Organise(object):
                 else:
                     dates[index] = int(date)
                 index += 1
-                
+
             return dates
-  
+
         for album in albums:
             album = album.split(' ')
-            
+
             if len(album) < 2:
                 break
-            
+
             dir_name = album[0]
-            
+
             date_1 = clean(album[1].split('/'))
             if len(album) == 3:
                 date_2 = clean(album[2].split('/'))
                 date_range = [(date_1[2], date_1[1], date_1[0]), (date_2[2], date_2[1], date_2[0])]
             else:
                 date_range = [(date_1[2], date_1[1], date_1[0]), (date_1[2], date_1[1], date_1[0])]
-                
+
             self._categories.append({'dir_name': dir_name, 'date_range': date_range, 'fcount': 0})
 
         return self._categories
-    
+
     def test(self):
         """Unit tests on src, dest paths
         :return: Boolean"""
@@ -77,7 +77,7 @@ class Organise(object):
         if not os.path.exists(self._dest):
             print(Colour.WARNING + 'The destination directory you entered does not exist!\n' + Colour.ENDC)
             return False
-        
+
         return True
 
     def seek(self, cwd):
@@ -92,10 +92,10 @@ class Organise(object):
         if 'DS_Store' in src_files:
             src_files.remove('.DS_Store')
         src_folders = []
-        
+
         for item in src_files:
             item_path = cwd + item
-            
+
             if os.path.isfile(item_path):
                 self.move(item_path)
             else:
@@ -125,7 +125,7 @@ class Organise(object):
                 date_range = cat['date_range']
                 fcount = cat['fcount']
                 dir_name = cat['dir_name']
-                
+
                 if date_range[0] <= date_created <= date_range[1]:
 
                     # make album dir
@@ -134,9 +134,9 @@ class Organise(object):
                         os.makedirs(dir_name)
                     except OSError:
                         pass
-                        
+
                     new_fname = dir_name[2:] + '_%d%s' % (fcount, file_ext)
-                    
+
                     new_path = self._dest + '/' + dir_name + '/' + new_fname
                     if not os.path.isfile(new_path):
                         shutil.copy2(file, new_path)
@@ -152,10 +152,10 @@ class Organise(object):
         :return:
         """
         print(Colour.OKBLUE + '\nSMURFS HAVE BEGUN WORK ON YOUR PHOTOS!\n' + Colour.ENDC)
-        
+
         if not self.test():
             return None
-        
+
         self.get_albums(self._albums)
         self.seek(self._src)
         print(Colour.OKBLUE + '\nSMURFS ARE FINISHED!\n' + Colour.ENDC)
@@ -164,76 +164,50 @@ class Organise(object):
 
 class App(object):
     """The Top-level class for the GUI."""
-    
+
     def __init__(self, root):
         """Initialises Gui params
         """
         self._root = root
         title = tk.Label(self._root, text="Photo Smurf")
-        
+
         self._input_count = 0
-        
+
         add_input = tk.Button(self._root, text="Add Album", command=self.create_input)
-        
+
         title.pack()
         add_input.pack()
-        
+
     def create_input(self):
         print('input created! ID: %d' % self._input_count)
-        
+
         # DAY
         day_label = tk.Label(text="Day")
-        
+
         days = [i for i in range(32) if i > 0]
         day = tk.StringVar()
         day.set(days[0])
         day_select = tk.OptionMenu(self._root, day, *days)
-        
+
         # MONTH
         month_label = tk.Label(text="Month")
-        
+
         months = [i for i in range(13) if i > 0]
         month = tk.StringVar()
         month.set(months[0])
         month_select = tk.OptionMenu(month, *months)
-        
+
         year_label = tk.Label(text="Year")
 
         year_input = tk.Entry(width=4)
-        
+
         day_label.pack()
         day_select.pack()
-        
+
         month_label.pack()
         month_select.pack()
-        
+
         year_label.pack()
         year_input.pack()
-        
+
         self._input_count += 1
-        
-    def exit(self):
-        """Close the application.
-        TemperaturePlotApp.exit() -> None
-        """
-        self._master.destroy()
-
-
-def main():
-    root = tk.Tk()
-    app = App(root)
-    app.create_input()
-    root.geometry("800x400")
-    # root.mainloop()
-
-# if __name__ == '__main__':
-    # main()
-    
-src_dir = '/Volumes/ALPHA/photo_library'
-dest_dir = '/Users/tomquirk/Pictures/photo_library'
-
-albums_file = 'albums.txt'
-
-organise = Organise(src_dir, dest_dir, albums_file)
-
-organise.run()

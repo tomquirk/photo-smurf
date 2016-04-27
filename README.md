@@ -5,7 +5,18 @@
 ## Usage
 
 1. Complete 'albums.txt' as described below
-2. Modify `src` and `dest` paths to wherever you need smurfs
+2. 
+```
+from smurf import Smurf
+src_dir = 'path/to/source'
+dest_dir = 'path/to/dest'
+
+albums_file = 'albums.txt'
+
+pics = Smurf(src_dir, dest_dir, albums_file)
+
+pics.run()
+```
 3. ...
 4. Profit
 
