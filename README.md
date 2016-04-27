@@ -6,17 +6,18 @@
 
 1. Complete 'albums.txt' as described below
 2. 
-```
-from smurf import Smurf
-src_dir = 'path/to/source'
-dest_dir = 'path/to/dest'
 
-albums_file = 'albums.txt'
+  ```
+  from smurf import Smurf
+  src_dir = 'path/to/source'
+  dest_dir = 'path/to/dest'
 
-pics = Smurf(src_dir, dest_dir, albums_file)
+  albums_file = 'albums.txt'
 
-pics.run()
-```
+  pics = Smurf(src_dir, dest_dir, albums_file)
+
+  pics.run()
+  ```
 3. ...
 4. Profit
 
