@@ -33,6 +33,7 @@ Start by creating 'albums.txt' within this directory. Within this file:
 
 #### Example
 > albums.txt
+
 `family_holiday 11/01/2015 28/01/2015`
 `work_trip 08/02/2015 09/02/2015`
 
