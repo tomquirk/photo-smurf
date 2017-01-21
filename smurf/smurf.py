@@ -1,6 +1,4 @@
 import os, sys, datetime, time, shutil
-import Tkinter as tk
-
 
 class Colour:
     """Class for holding ANSI print colours"""
@@ -160,54 +158,3 @@ class Smurf(object):
         self.seek(self._src)
         print(Colour.OKBLUE + '\nSMURFS ARE FINISHED!\n' + Colour.ENDC)
         return None
-
-
-class App(object):
-    """The Top-level class for the GUI."""
-
-    def __init__(self, root):
-        """Initialises Gui params
-        """
-        self._root = root
-        title = tk.Label(self._root, text="Photo Smurf")
-
-        self._input_count = 0
-
-        add_input = tk.Button(self._root, text="Add Album", command=self.create_input)
-
-        title.pack()
-        add_input.pack()
-
-    def create_input(self):
-        print('input created! ID: %d' % self._input_count)
-
-        # DAY
-        day_label = tk.Label(text="Day")
-
-        days = [i for i in range(32) if i > 0]
-        day = tk.StringVar()
-        day.set(days[0])
-        day_select = tk.OptionMenu(self._root, day, *days)
-
-        # MONTH
-        month_label = tk.Label(text="Month")
-
-        months = [i for i in range(13) if i > 0]
-        month = tk.StringVar()
-        month.set(months[0])
-        month_select = tk.OptionMenu(month, *months)
-
-        year_label = tk.Label(text="Year")
-
-        year_input = tk.Entry(width=4)
-
-        day_label.pack()
-        day_select.pack()
-
-        month_label.pack()
-        month_select.pack()
-
-        year_label.pack()
-        year_input.pack()
-
-        self._input_count += 1

@@ -1,2 +1,4 @@
 album_full.txt
 **/*.pyc
+.DS_Store
+
