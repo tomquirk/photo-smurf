@@ -71,46 +71,6 @@ class Smurf:
 
         return albums
 
-    def test(self):
-        """Unit tests on src, dest paths
-        :return: Boolean
-        """
-        if not os.path.exists(self._src):
-            print(Colour.WARNING + 'The source directory you entered does not exist!\n' + Colour.ENDC)
-            return False
-        if not os.path.exists(self._dest):
-            print(Colour.WARNING + 'The destination directory you entered does not exist!\n' + Colour.ENDC)
-            return False
-
-        return True
-
-    def seek(self, cwd):
-        """
-        Crawls through directory and places files within a specified date range in their specified category
-        :param cwd: str
-        :return: None
-        """
-        cwd += '/'
-        os.chdir(cwd)   # change current working dir to 'cwd' arg
-        src_files = os.listdir(cwd)
-        if 'DS_Store' in src_files:
-            src_files.remove('.DS_Store')
-        src_folders = []
-
-        for item in src_files:
-            item_path = cwd + item
-
-            if os.path.isfile(item_path):
-                self.move(item_path)
-            else:
-                src_folders.append(item_path)
-
-        for folder_path in src_folders:
-            print(folder_path.split('/')[-1])
-            self.seek(folder_path)
-
-        return None
-
     def move(self, file):
         """
         Moves given file to new directory, as determined by its created date and the date range of a particular category
@@ -149,6 +109,48 @@ class Smurf:
                                   Colour.ENDC) % (new_filename, os.path.basename(dir_name)))
 
                         self._categories[i]['file_count'] += 1
+
+    def seek(self, cwd):
+        """
+        Crawls through directory and places files within a specified date range in their specified category
+        :param cwd: str
+        :return: None
+        """
+        cwd += '/'
+        os.chdir(cwd)   # change current working dir to 'cwd' arg
+        src_files = os.listdir(cwd)
+
+        if 'DS_Store' in src_files:
+            src_files.remove('.DS_Store')
+
+        src_folders = []
+
+        for item in src_files:
+            item_path = cwd + item
+
+            if os.path.isfile(item_path):
+                self.move(item_path)
+            else:
+                src_folders.append(item_path)
+
+        for folder_path in src_folders:
+            print(folder_path.split('/')[-1])
+            self.seek(folder_path)
+
+        return None
+
+    def test(self):
+        """Unit tests on src, dest paths
+        :return: Boolean
+        """
+        if not os.path.exists(self._src):
+            print(Colour.WARNING + 'The source directory you entered does not exist!\n' + Colour.ENDC)
+            return False
+        if not os.path.exists(self._dest):
+            print(Colour.WARNING + 'The destination directory you entered does not exist!\n' + Colour.ENDC)
+            return False
+
+        return True
 
     def run(self):
         """

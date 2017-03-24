@@ -1,4 +1,4 @@
-# Photo Smurf (alpha)
+# Photo Smurf
 
 ### A Date-based File Crawler that Beautifies your Photo Library
 <img src="http://vignette1.wikia.nocookie.net/smurfs/images/9/92/Handy_Comic_Book.jpg/revision/latest?cb=20120920121205">
@@ -39,7 +39,6 @@ family_holiday 11/01/2015 28/01/2015
 work_trip 08/02/2015 09/02/2015
 ```
 
-## Progression from Alpha
-### Aim
-
-To create a standalone Mac app with GUI 
+# Todo
+    -   multi-threading
+    -   GUI
