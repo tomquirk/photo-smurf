@@ -18,7 +18,7 @@ For example, you went on a holiday to New Zealand between 27/01/2016 and 15/02/2
 3. ...
 4. Profit
 
-Have a look at `smurf.py` if you want to use it within your own Python project.
+To use as a module, simply `from smurf import Smurf`.
 
 ### Creating an "Album"
 
@@ -28,7 +28,7 @@ Start by creating 'albums.txt' within this directory. Within this file:
 
 - Separate each album with newline.
 - Date formatting: DD/MM/YYYY
-- Make sure your album name contains NO SPACES (because thats silly)!
+- Make sure your album name contains NO SPACES (because that's silly)!
 - If your album only spans 1 day, you only need `FROM_DATE`
 
 #### Example
