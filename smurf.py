@@ -128,6 +128,9 @@ class Smurf:
         for item in src_files:
             item_path = cwd + item
 
+            if self._dest in cwd:
+                continue
+
             if os.path.isfile(item_path):
                 self.move(item_path)
             else:

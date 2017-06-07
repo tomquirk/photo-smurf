@@ -1,5 +1,7 @@
 album_full.txt
 **/*.pyc
+__pycache__/
+.vscode/
 .DS_Store
 .idea/
 

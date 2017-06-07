@@ -4,25 +4,34 @@
 <img src="http://vignette1.wikia.nocookie.net/smurfs/images/9/92/Handy_Comic_Book.jpg/revision/latest?cb=20120920121205">
 
 ## Why?
-You have a bunch of unorganised photos somewhere. You want to move these photos into folders that are grouped by date. 
-For example, you went on a holiday to New Zealand between 27/01/2016 and 15/02/2016 - Photo smurf will find all the photos between that date and put them in a folder!
+
+> All my photos are unorganised, scattered across my computer/harddrive - help!
+
+Sound familiar?
+
+Simply tell these smurfs when you went on holidays i.e New Zealand between 27/01/2016 and 15/02/2016. Photo smurf will search your computer for any photo taken between specified dates and put them in folders representing albums!
 
 ## Usage
 
-1. Complete 'albums.txt' as described below
-2. 
+Create an _albums_ config file as described below
 
-  ```
-  python smurf.py [src_dir] [dest_dir] [album_config]
-  ```
-3. ...
-4. Profit
+### CLI
+```
+python smurf.py [src_dir] [dest_dir] [album_config]
+```
 
-To use as a module, simply `from smurf import Smurf`.
+### GUI
+Load everything and click `Go!`
 
-### Creating an "Album"
+### Standalone Module
 
-Start by creating 'albums.txt' within this directory. Within this file:
+1. `from smurf import Smurf`.
+2. `my_smurf = Smurf(<src>, <dest>, <album_config>)`
+3. `my_smurf.run()`
+
+## The Album Config File
+
+Start by creating a file i.e. 'albums.txt' within this directory. To specifiy an album within this file:
 
 `[ALBUM_NAME] [FROM_DATE] [TO_DATE]`
 
@@ -40,5 +49,5 @@ work_trip 08/02/2015 09/02/2015
 ```
 
 # Todo
-    -   multi-threading
-    -   GUI
+-   multi-threading
+-   GUI
